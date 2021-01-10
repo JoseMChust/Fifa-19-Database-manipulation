@@ -1,0 +1,91 @@
+import csv
+
+file = " " #add here the directory to find the csv file location
+
+#STEP 1. CREATE A DICTIONARY CONTAINING ID + NAME , PLUS A DASHBOARD FOR EVERY PLAYER
+
+idList = []
+nameList = []
+
+playerList = []
+
+fifaPositions = []
+
+selectedHeader = []
+
+#the with clausule is used to perfom all the features with opening once at the beginning
+with open(file,encoding = "utf8") as csvfile: #without the encoding, unicodeDecodeError charmap will appear
+    
+    reader = csv.reader(csvfile)
+    header = next(csvfile) #the header with every column
+    header = header.split(",")
+    
+    selectedHeader.append(header[1])
+    selectedHeader.append(header[2])
+    selectedHeader.append(header[3])
+    selectedHeader.append(header[5])
+    selectedHeader.append(header[7])
+    selectedHeader.append(header[8])
+    selectedHeader.append(header[9])
+    selectedHeader.append(header[11])
+    selectedHeader.append(header[12])
+    selectedHeader.append(header[14])
+    selectedHeader.append(header[21])
+    selectedHeader.append(header[26])
+    selectedHeader.append(header[27])
+    
+    for t in header[54:87]:
+        selectedHeader.append(t)
+    
+    
+    for i in reader:
+        box = []
+        box.append(i)
+        for j in box: #create 2 different lists to store id and name
+            idList.append(j[1])
+            nameList.append(j[2])
+            
+            
+            #now let's add the rellevant information for every player, so we have to slice and convert data types
+            temp = []
+            
+            temp.append(j[1]) #id
+            temp.append(j[2]) #name
+            temp.append(int(j[3])) #age
+            temp.append(j[5]) #origin country
+            
+            temp.append(int(j[7])) #overall
+            temp.append(int(j[8])) #potential
+            temp.append(int(j[9])) #club
+            
+            #value
+            temp.append(float(j[11].strip("€M")))
+            
+            #wage
+            temp.append(float(j[12].strip("€K")))
+            
+            temp.append(j[14]) #preferred foot
+            temp.append(j[21]) #position
+            
+            if j[21] not in fifaPositions: #let's create a list that storage every position
+                fifaPositions.append(j[21])
+                
+                
+            #height
+            temp.append(float(j[26].replace("'","."))) #height
+            
+            #weight
+            ut = j[27].split("lbs")
+            temp.append(int(ut[0]))
+            
+            #stats
+            for w in j[54:87]:
+                try:
+                    temp.append(int(w))
+                except:
+                    continue
+            
+            
+            playerList.append(temp)
+            
+playerDict = dict(zip(idList,nameList)) #zip them out in a disctionary
